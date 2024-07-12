@@ -5,15 +5,27 @@ import os
 from flask import Flask, request, jsonify, url_for
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
-from datastructures import FamilyStructure
+from datastructures import FamilyStructure, FamilyMember
 #from models import Person
 
 app = Flask(__name__)
 app.url_map.strict_slashes = False
 CORS(app)
 
+
 # create the jackson family object
 jackson_family = FamilyStructure("Jackson")
+
+tellechea_family = FamilyStructure("Tellechea")
+me = FamilyMember("Ines", 39, [1])
+mariana = FamilyMember("Mariana", 2, [1])
+
+tellechea_family.add_member(me)
+tellechea_family.add_member(mariana)
+
+print(tellechea_family.last_name)
+
+tellechea_family.get_member(2)
 
 # Handle/serialize errors like a JSON object
 @app.errorhandler(APIException)
@@ -42,3 +54,4 @@ def handle_hello():
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))
     app.run(host='0.0.0.0', port=PORT, debug=True)
+
